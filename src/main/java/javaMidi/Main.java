@@ -764,7 +764,7 @@ public class Main {
 			if (activeNotes[i] != 0) {
 				for (byte j = 0; j < 32; j++) {
 					if (((activeNotes[i] >> j) & 1) == 1) {
-						MIDI.sendNoteOff(i, (short) 0, currentChanal);
+						MIDI.sendNoteOff(i, (short) 0, j);
 					}
 				}
 				activeNotes[i] = 0;
