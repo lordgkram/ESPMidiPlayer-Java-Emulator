@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class Main {
-	public static final String BROKER = "tcp://192.168.2.121";
+	public static final String BROKER = "tcp://192.168.178.7";
 	public static final String CLIENT_ID = "MIDI";
 	public static final String TOPIC_IRC_TX = "irc/tx";
 	public static final String TOPIC_MIDI = "playmidi";
