@@ -28,7 +28,7 @@ public class Window {
 	JSlider volumen;
 
 	public Window() {
-		JFrame jf = new JFrame("ProjektionTV Midi Emulator v0.3");
+		JFrame jf = new JFrame("ProjektionTV Midi Emulator v" + Main.MAJOR_VERSION + "." + Main.MINOR_VERSION + "");
 		jf.setSize(1280, 720);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

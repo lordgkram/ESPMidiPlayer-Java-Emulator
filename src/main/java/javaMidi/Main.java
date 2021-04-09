@@ -1,10 +1,10 @@
 package javaMidi;
 
-import java.io.IOException;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -18,16 +18,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class Main {
-	public static final String BROKER = "tcp://192.168.178.7";
-	public static final String CLIENT_ID = "MIDI";
-	public static final String TOPIC_IRC_TX = "irc/tx";
-	public static final String TOPIC_MIDI = "playmidi";
+	public static String BROKER = "tcp://127.0.0.1";
+	public static String CLIENT_ID = "MIDI";
+	public static String TOPIC_IRC_TX = "irc/tx";
+	public static String TOPIC_MIDI = "playmidi";
 	public static final short DEFALT_MIDI_CHANAL = 1;
 	public static final boolean ALLOW_PARSER_2 = true;
 	public static final int DEFALT_BPM = 240;
-	public static final int NOTEN_BUFFER_LAENGE = 8;
+	public static int NOTEN_BUFFER_LAENGE = 8;
 	public static final boolean ENABLE_PARSER_1_1 = true;
 	public static final boolean ALLOW_MULTI_CHANAL_MIDI = true;
+	public static final int MAJOR_VERSION = 0;
+	public static final int MINOR_VERSION = 4;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
 	public static short MIDI_INSTRUMENT_vibes = 11;
@@ -51,16 +53,69 @@ public class Main {
 	Window window;
 
 	public static void main(String[] args) {
+		System.out.println("loading System v" + Main.MAJOR_VERSION + "." + Main.MINOR_VERSION + "");
+		Options options = new Options();
+		Option optBroker = new Option("b", "protucoll and ip of mqtt broker");
+		optBroker.setArgs(1);
+		optBroker.setLongOpt("broker");
+		options.addOption(optBroker);
+		Option optMidi = new Option("m", "topic of Midi activity");
+		optMidi.setArgs(1);
+		optMidi.setLongOpt("topicMidi");
+		options.addOption(optMidi);
+		Option optChat = new Option("c", "topic of Twitch chat output");
+		optChat.setArgs(1);
+		optChat.setLongOpt("topicChat");
+		options.addOption(optChat);
+		Option optClientID = new Option("i", "mqtt clientID");
+		optClientID.setArgs(1);
+		optClientID.setLongOpt("clientID");
+		options.addOption(optClientID);
+		Option optNBL = new Option("a", "amount of note buffers");
+		optNBL.setArgs(1);
+		optNBL.setLongOpt("noteBufferLenght");
+		options.addOption(optNBL);
+		Option optMqtt = new Option("q", "if Mqtt should be used");
+		optMqtt.setArgs(0);
+		optMqtt.setLongOpt("mqtt");
+		options.addOption(optMqtt);
+		Option optHelp = new Option("h", "shows help");
+		optHelp.setArgs(0);
+		optHelp.setLongOpt("help");
+		options.addOption(optHelp);
+		DefaultParser parser = new DefaultParser();
 		try {
-			System.out.println("loading System v0.3");
-			if (args.length != 0 && args[0].equalsIgnoreCase("-mqtt"))
-				main = new Main(true);
-			else
-				main = new Main(false);
+			CommandLine cli = parser.parse(options, args);
+			if (cli.hasOption("h")) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("javaMidi", "ProjektionTV Java-MIDI Emulator", options, "by [lord]gkram[_]");
+				return;
+			}
+			if (cli.hasOption("a")) {
+				NOTEN_BUFFER_LAENGE = Integer.parseInt(cli.getOptionValue("a"));
+			}
+			if (cli.hasOption("q")) {
+				if (cli.hasOption("b")) {
+					BROKER = cli.getOptionValue("b");
+				}
+				if (cli.hasOption("i")) {
+					CLIENT_ID = cli.getOptionValue("i");
+				}
+				if (cli.hasOption("c")) {
+					TOPIC_IRC_TX = cli.getOptionValue("c");
+				}
+				if (cli.hasOption("m")) {
+					TOPIC_MIDI = cli.getOptionValue("m");
+				}
+				new Main(true);
+			} else {
+				new Main(false);
+			}
 			System.out.println("loading MIDI");
 			MIDI.init();
-		} catch (MidiUnavailableException | InvalidMidiDataException | IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			new Main(false);
 		}
 	}
 
@@ -161,15 +216,20 @@ public class Main {
 						// daten zum buffer hinzu fügen
 						if (notenBuffer[bufferID].daten.length() == notenBuffer[bufferID].maximaleLaenge) {
 							schreibeChatNachricht("(MIDI) @" + nutzer + " dein Puffer ist Voll!");
-						} else if ((notenBuffer[bufferID].daten.length() + midi.length()) > notenBuffer[bufferID].maximaleLaenge) {
+						} else if ((notenBuffer[bufferID].daten.length()
+								+ midi.length()) > notenBuffer[bufferID].maximaleLaenge) {
 							notenBuffer[bufferID].daten = notenBuffer[bufferID].daten + midi + " ";
-							notenBuffer[bufferID].daten = notenBuffer[bufferID].daten.substring(0, notenBuffer[bufferID].maximaleLaenge);
-							schreibeChatNachricht("(MIDI) @" + nutzer + " daten wurden zu deinem Puffer hinzugefügt. Achtung es wurden Daten entfernt da der puffer überfüllt wurde ("
-									+ notenBuffer[bufferID].daten.length() + "/" + notenBuffer[bufferID].maximaleLaenge + ").");
+							notenBuffer[bufferID].daten = notenBuffer[bufferID].daten.substring(0,
+									notenBuffer[bufferID].maximaleLaenge);
+							schreibeChatNachricht("(MIDI) @" + nutzer
+									+ " daten wurden zu deinem Puffer hinzugefügt. Achtung es wurden Daten entfernt da der puffer überfüllt wurde ("
+									+ notenBuffer[bufferID].daten.length() + "/" + notenBuffer[bufferID].maximaleLaenge
+									+ ").");
 						} else {
 							notenBuffer[bufferID].daten = notenBuffer[bufferID].daten + midi + " ";
-							schreibeChatNachricht(
-									"(MIDI) @" + nutzer + " daten wurden zu deinem Puffer hinzugefügt (" + notenBuffer[bufferID].daten.length() + "/" + notenBuffer[bufferID].maximaleLaenge + ").");
+							schreibeChatNachricht("(MIDI) @" + nutzer + " daten wurden zu deinem Puffer hinzugefügt ("
+									+ notenBuffer[bufferID].daten.length() + "/" + notenBuffer[bufferID].maximaleLaenge
+									+ ").");
 						}
 					} else {
 						if (midi.startsWith("n")) {
@@ -204,10 +264,12 @@ public class Main {
 								notenBuffer[bufferID].maximaleLaenge = maximaleBufferGroesse;
 								notenBuffer[bufferID].daten = midi + " ";
 								if (notenBuffer[bufferID].daten.length() > notenBuffer[bufferID].maximaleLaenge) {
-									notenBuffer[bufferID].daten = notenBuffer[bufferID].daten.substring(0, notenBuffer[bufferID].maximaleLaenge);
+									notenBuffer[bufferID].daten = notenBuffer[bufferID].daten.substring(0,
+											notenBuffer[bufferID].maximaleLaenge);
 								}
-								schreibeChatNachricht(
-										"(MIDI) @" + nutzer + " puffer wurde erfolgreich erschaffen (" + notenBuffer[bufferID].daten.length() + "/" + notenBuffer[bufferID].maximaleLaenge + ").");
+								schreibeChatNachricht("(MIDI) @" + nutzer + " puffer wurde erfolgreich erschaffen ("
+										+ notenBuffer[bufferID].daten.length() + "/"
+										+ notenBuffer[bufferID].maximaleLaenge + ").");
 							} else {
 								schreibeChatNachricht("(MIDI) @" + nutzer + " puffer konte nicht erschaffen werden.");
 							}
@@ -456,7 +518,8 @@ public class Main {
 				boolean allowHabtonC = gnidr.allowHalbtonC;
 				boolean allowHabtonB = gnidr.allowHalbtonB;
 				if (noteID != 2000)
-					parser2note(convertNote(noteID, oktaveOffset, habtonC, habtonB, allowHabtonC, allowHabtonB, noteDown));
+					parser2note(
+							convertNote(noteID, oktaveOffset, habtonC, habtonB, allowHabtonC, allowHabtonB, noteDown));
 				if (buffer.length() != 0)
 					parser2(buffer);
 			}
@@ -825,8 +888,10 @@ public class Main {
 		return new ReadHalbtonReturn(halbtonC, halbtonB, s);
 	}
 
-	public short convertNote(short noteId, short oktavenOffset, boolean habtonC, boolean habtonB, boolean allowHabtonC, boolean allowHabtonB, boolean noteDown) {
-		return (short) (noteId + (oktavenOffset * 12 * (noteDown ? -1 : 1)) + (allowHabtonC && habtonC ? 1 : 0) - (allowHabtonB && habtonB ? 1 : 0));
+	public short convertNote(short noteId, short oktavenOffset, boolean habtonC, boolean habtonB, boolean allowHabtonC,
+			boolean allowHabtonB, boolean noteDown) {
+		return (short) (noteId + (oktavenOffset * 12 * (noteDown ? -1 : 1)) + (allowHabtonC && habtonC ? 1 : 0)
+				- (allowHabtonB && habtonB ? 1 : 0));
 	}
 
 	public ReadOktaveOffsetReturn readOktaveOffset(String s) {

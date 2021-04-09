@@ -10,7 +10,7 @@ Emulator für [ESP32MidiPlayer](https://github.com/ProjektionTV/Esp32MidiPlayer)
 `gradlew getDeps build`
 
 ## Ausführen
-Zum Ausführen werden die 3 jar files in `build/libs` benötigt sowie eine sountfont im gleichen Ordner wie die 3 jar-Dateien namens `sf.sf2` zum Beispiel [diese](https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip) 
+Zum Ausführen werden die 3 jar files in `build/libs` benötigt sowie eine sountfont im gleichen Ordner wie die 4 jar-Dateien namens `sf.sf2` zum Beispiel [diese](https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip) 
 
 Um den Mqtt-Player Modus zu aktivieren muss man das Argument `-mqtt` anhängen. z.B.: `java -jar javaMidi.jar -mqtt`
 
@@ -22,3 +22,12 @@ Um den Mqtt-Player Modus zu aktivieren muss man das Argument `-mqtt` anhängen. 
 
 ## Noten Erklärung
 [hier](https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax)
+
+## CLI
+* `-a/--noteBufferLenght (zahl)` - anzahl der noten buffer
+* `-b/--broker (protukoll)://(ip)[:(port)]` - protukoll und ip vom mqtt broker z.B.: `tcp://127.0.0.1`
+* `-c/--topicChat (topic)` - der mqtt-topic für den Chat ausgang
+* `-h/--help` - zeigt die hilfe
+* `-i/--clientID (id)` - Mqtt-Client id
+* `-m/--topicMidi (topic)` - der mqtt-topic für den playmidi trafic
+* `-q/--mqtt` - soll mqtt genutzt werden

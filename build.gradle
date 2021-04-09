@@ -14,6 +14,7 @@ repositories {
 dependencies {
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.1'
 	implementation 'com.google.code.gson:gson:2.8.6'
+	implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
 
 sourceSets {
