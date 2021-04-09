@@ -52,7 +52,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-			System.out.println("loading System");
+			System.out.println("loading System v0.3");
 			if (args.length != 0 && args[0].equalsIgnoreCase("-mqtt"))
 				main = new Main(true);
 			else
@@ -325,8 +325,10 @@ public class Main {
 		}
 		parser2allOFF();
 
-		for (short i = 1; i < 17; i++)
+		for (short i = 0; i < 17; i++) {
 			MIDI.sendProgramChange(MIDI_INSTRUMENT_piano, i);
+			MIDI.sendControlChange((short) 7, (short) 127, i);
+		}
 	}
 
 	public void parserT(String buffer) {
@@ -389,6 +391,16 @@ public class Main {
 			} else if (note == 'l' || note == 'L') {
 				if (zuletztGenannteNote != 2000) {
 					parser2note(zuletztGenannteNote);
+				}
+				if (buffer.length() != 0)
+					parser2(buffer);
+			} else if (note == 'v' || note == 'V') {
+				if (buffer.length() != 0 && isNumber(buffer.charAt(0))) {
+					ReadNumberReturn rnr = readNumber(buffer);
+					buffer = rnr.outPut;
+					short nv = (short) rnr.number;
+					if (nv < 128 && nv >= 0)
+						MIDI.sendControlChange((short) 7, nv, currentChanal);
 				}
 				if (buffer.length() != 0)
 					parser2(buffer);
