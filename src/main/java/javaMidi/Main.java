@@ -88,7 +88,7 @@ public class Main {
 			CommandLine cli = parser.parse(options, args);
 			if (cli.hasOption("h")) {
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("javaMidi", "ProjektionTV Java-MIDI Emulator", options, "by [lord]gkram[_]");
+				formatter.printHelp("javaMidi", "ProjektionTV Java-MIDI Emulator", options, "by [lord]gkram[_] & (parser,(mqttcallback),(playsong) & playNote:ProjektionTV)");
 				return;
 			}
 			if (cli.hasOption("a")) {
@@ -107,15 +107,15 @@ public class Main {
 				if (cli.hasOption("m")) {
 					TOPIC_MIDI = cli.getOptionValue("m");
 				}
-				new Main(true);
+				main = new Main(true);
 			} else {
-				new Main(false);
+				main = new Main(false);
 			}
 			System.out.println("loading MIDI");
 			MIDI.init();
 		} catch (Exception e) {
 			e.printStackTrace();
-			new Main(false);
+			main = new Main(false);
 		}
 	}
 
