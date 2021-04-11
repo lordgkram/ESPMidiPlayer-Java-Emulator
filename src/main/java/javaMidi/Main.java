@@ -29,7 +29,7 @@ public class Main {
 	public static final boolean ENABLE_PARSER_1_1 = true;
 	public static final boolean ALLOW_MULTI_CHANAL_MIDI = true;
 	public static final int MAJOR_VERSION = 0;
-	public static final int MINOR_VERSION = 4;
+	public static final int MINOR_VERSION = 5;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
 	public static short MIDI_INSTRUMENT_vibes = 11;
