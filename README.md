@@ -12,7 +12,7 @@ Emulator für [ESP32MidiPlayer](https://github.com/ProjektionTV/Esp32MidiPlayer)
 ## Ausführen
 Zum Ausführen werden die 3 jar files in `build/libs` benötigt sowie eine sountfont im gleichen Ordner wie die 4 jar-Dateien namens `sf.sf2` zum Beispiel [diese](https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip) 
 
-Um den Mqtt-Player Modus zu aktivieren muss man das Argument `-mqtt` anhängen. z.B.: `java -jar javaMidi.jar -mqtt`
+Um den Mqtt-Player Modus zu aktivieren muss man das Argument `--mqtt` anhängen. z.B.: `java -jar javaMidi.jar --mqtt`
 
 ## UI Erklärung
 

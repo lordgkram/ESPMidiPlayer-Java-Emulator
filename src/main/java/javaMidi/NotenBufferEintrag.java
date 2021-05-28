@@ -2,10 +2,10 @@ package javaMidi;
 
 public class NotenBufferEintrag {
 	
-	short priority;
-	String besitzer;
-	String daten;
-	int maximaleLaenge;
+	public short priority;
+	public String besitzer;
+	public String daten;
+	public int maximaleLaenge;
 	
 	public NotenBufferEintrag() {
 		priority = 0;

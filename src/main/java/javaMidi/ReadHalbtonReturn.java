@@ -2,9 +2,9 @@ package javaMidi;
 
 public class ReadHalbtonReturn {
 	
-	boolean habltonC;
-	boolean halbtonB;
-	String str;
+	public boolean habltonC;
+	public boolean halbtonB;
+	public String str;
 	
 	public ReadHalbtonReturn(boolean habltonC, boolean halbtonB, String str) {
 		this.habltonC = habltonC;

@@ -1,16 +1,25 @@
 package javaMidi;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
+import java.awt.Desktop.Action;
+import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,26 +32,37 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import com.google.gson.JsonObject;
+
+import javaMidi.cppconv.Interface;
 
 public class Window {
 
 	JTextArea input;
-	JTextArea chat;
+	public JTextArea chat;
 	JSlider volumen;
+	public Image icon;
 
 	public Window() {
-		JFrame jf = new JFrame("ProjektionTV Midi Emulator v" + Main.MAJOR_VERSION + "." + Main.MINOR_VERSION + "");
+		try {
+			icon = ImageIO.read(getClass().getResourceAsStream("/icon.png"));
+		} catch (IOException | IllegalArgumentException e) {
+		}
+		JFrame jf = new JFrame("ProjektionTV Midi Emulator v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION
+				+ "" + (JavaMain.INDEV ? "-indev" : ""));
 		jf.setSize(1280, 720);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if (icon != null)
+			jf.setIconImage(icon);
 
-		input = new JTextArea(5, 500);
+		input = new JTextArea(10, 500);
 		input.setEditable(true);
 		JScrollPane jspi = new JScrollPane(input);
 
@@ -61,9 +81,13 @@ public class Window {
 		JSpinner prio = new JSpinner();
 		prio.setValue(0);
 		JCheckBox doBuffer = new JCheckBox("Aktivire Buffer");
+		JCheckBox doAdmin = new JCheckBox("Aktivire Admin");
 		volumen = new JSlider(JSlider.HORIZONTAL, 0, 127, 127);
 
 		JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL);
+
+		chat.setAutoscrolls(true);
+		input.setAutoscrolls(true);
 
 		settings.add(new JLabel("name:"));
 		settings.add(new JLabel("maximale Spieleit:"));
@@ -71,6 +95,7 @@ public class Window {
 		settings.add(new JLabel("Puffer prioritaet:"));
 		settings.add(new JLabel("Lautstaerke:"));
 		settings.add(doBuffer);
+		settings.add(doAdmin);
 
 		settings.add(name);
 		settings.add(maxPlayTime);
@@ -92,12 +117,14 @@ public class Window {
 				if (!send.isEnabled())
 					return;
 				send.setEnabled(false);
-				String head = "{\"aktiviereBuffer\":" + (doBuffer.isSelected() ? "true" : "false") + ",\"laenge\":"
-						+ String.valueOf(maxPlayTime.getValue()) + "," + "\"maximaleBufferGroesse\":"
-						+ String.valueOf(maxBuffer.getValue()) + ",\"prioritaet\":" + String.valueOf(prio.getValue())
-						+ ",\"nutzer\":\"" + name.getText() + "\",\"midi\":\"";
-				String suffix = "\"}";
 				String[] toPlay = input.getText().split("\n");
+				JsonObject o = new JsonObject();
+				o.addProperty("aktiviereBuffer", doBuffer.isSelected());
+				o.addProperty("laenge", (int) maxPlayTime.getValue());
+				o.addProperty("maximaleBufferGroesse", (int) maxBuffer.getValue());
+				o.addProperty("prioritaet", (int) prio.getValue());
+				o.addProperty("nutzer", name.getText());
+				o.addProperty("adminModus", doAdmin.isSelected());
 				progress.setMaximum(toPlay.length);
 				new Thread(new Runnable() {
 					@Override
@@ -105,9 +132,9 @@ public class Window {
 						for (int i = 0; i < toPlay.length; i++) {
 							progress.setValue(i + 1);
 							String t = toPlay[i];
-							MqttMessage msg = new MqttMessage((head + t + suffix).getBytes());
 							try {
-								Main.main.messageArrived(Main.TOPIC_MIDI, msg);
+								o.addProperty("midi", t);
+								Interface.mqttCallback(JavaMain.TOPIC_MIDI, JavaMain.main.gson.toJson(o));
 								jf.repaint();
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -122,12 +149,13 @@ public class Window {
 		});
 
 		JPanel dChat = new JPanel(new BorderLayout());
-		dChat.add(progress, BorderLayout.CENTER);
-		dChat.add(jspc, BorderLayout.SOUTH);
+		dChat.add(progress, BorderLayout.NORTH);
+		dChat.add(jspc, BorderLayout.CENTER);
+
+		JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jspi, dChat);
 
 		JPanel content = new JPanel(new BorderLayout());
-		content.add(jspi, BorderLayout.CENTER);
-		content.add(dChat, BorderLayout.SOUTH);
+		content.add(jsp, BorderLayout.CENTER);
 		content.add(settings, BorderLayout.NORTH);
 
 		jf.setContentPane(content);
@@ -164,15 +192,102 @@ public class Window {
 
 		jmb.add(jmTools);
 
+		JMenu jmAnsicht = new JMenu("Ansicht");
+
+		JCheckBoxMenuItem jcmiLineWrap = new JCheckBoxMenuItem("Zeilenumbruch");
+		jcmiLineWrap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				boolean nv = jcmiLineWrap.isSelected();
+				chat.setLineWrap(nv);
+				input.setLineWrap(nv);
+			}
+		});
+		jmAnsicht.add(jcmiLineWrap);
+
+		jmb.add(jmAnsicht);
+
+		JMenu jmHilfe = new JMenu("Hilfe");
+
+		JMenuItem jmiLNoten = new JMenuItem("Noten dukumentation");
+		jmiLNoten.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE))
+					try {
+						Desktop.getDesktop()
+								.browse(new URI("https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax"));
+					} catch (IOException | URISyntaxException e) {
+					}
+				else
+					JOptionPane.showMessageDialog(jf,
+							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konte nicht geofnet werden",
+							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
+
+			}
+		});
+		jmHilfe.add(jmiLNoten);
+
+		JMenuItem jmiLEmu = new JMenuItem("Emulator dukumentation");
+		jmiLEmu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE))
+					try {
+						Desktop.getDesktop().browse(new URI(
+								"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator"));
+					} catch (IOException | URISyntaxException e) {
+					}
+				else
+					JOptionPane.showMessageDialog(jf,
+							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konte nicht geofnet werden",
+							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
+			}
+		});
+		jmHilfe.add(jmiLEmu);
+
+		JMenuItem jmiueber = new JMenuItem("Über");
+		jmiueber.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String text = 	"ProjektionTV Esp32 MidiPlayer - Java Emulator\n" +
+								"v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION + (JavaMain.INDEV ? "-indev" : "") + "\n" +
+								"von gkram\n";
+				JOptionPane.showMessageDialog(jf, text, "Über", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(icon));
+			}
+		});
+		jmHilfe.add(jmiueber);
+
+		JMenuItem jmiLProjektion = new JMenuItem("Zu ProjektionTV");
+		jmiLProjektion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE))
+					try {
+						Desktop.getDesktop().browse(new URI("https://www.twitch.tv/projektiontv"));
+					} catch (IOException | URISyntaxException e) {
+					}
+				else
+					JOptionPane.showMessageDialog(jf,
+							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konte nicht geofnet werden",
+							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
+			}
+		});
+		jmHilfe.add(jmiLProjektion);
+
+		jmb.add(jmHilfe);
+
 		jf.setJMenuBar(jmb);
 
 		jf.setVisible(true);
 	}
 
 	public JFrame getMidiImport() {
-		JFrame e = new JFrame(
-				"ProjektionTV Midi Emulator v" + Main.MAJOR_VERSION + "." + Main.MINOR_VERSION + " .mid Convertierer");
+		JFrame e = new JFrame("ProjektionTV Midi Emulator v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION
+				+ (JavaMain.INDEV ? "-indev" : "") + " .mid Convertierer");
 		e.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		if (icon != null)
+			e.setIconImage(icon);
 
 		JFileChooser jfc = new JFileChooser();
 		int rtn = jfc.showOpenDialog(e);
@@ -217,9 +332,11 @@ public class Window {
 	}
 
 	public JFrame getTwitchFormatter() {
-		JFrame e = new JFrame(
-				"ProjektionTV Midi Emulator v" + Main.MAJOR_VERSION + "." + Main.MINOR_VERSION + " Twitch Formatter");
+		JFrame e = new JFrame("ProjektionTV Midi Emulator v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION
+				+ (JavaMain.INDEV ? "-indev" : "") + " Twitch Formatter");
 		e.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		if (icon != null)
+			e.setIconImage(icon);
 
 		JPanel content = new JPanel(new BorderLayout());
 
