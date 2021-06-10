@@ -148,7 +148,7 @@ public class Parser1 {
             return;
         }
 
-        if(buffer == "")
+        if(buffer.length() == 0)
             return;
 
         char note = buffer.charAt(0);

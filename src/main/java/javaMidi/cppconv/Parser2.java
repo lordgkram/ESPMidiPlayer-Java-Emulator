@@ -14,7 +14,7 @@ public class Parser2 {
         if (System.currentTimeMillis() > JavaMain.main.timeout)
             return;
 
-        if(buffer == "")
+        if(buffer.length() == 0)
             return;
 
         if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {

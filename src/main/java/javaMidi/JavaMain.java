@@ -26,6 +26,8 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.Gson;
 
 public class JavaMain {
@@ -50,7 +52,7 @@ public class JavaMain {
 	public static final int MENGE_PRESET_INSTRUMENTE = 8;
 
 	public static final int MAJOR_VERSION = 0;
-	public static final int MINOR_VERSION = 6;
+	public static final int MINOR_VERSION = 7;
 	public static final boolean INDEV = false;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
@@ -81,45 +83,35 @@ public class JavaMain {
 				+ (INDEV ? "-indev" : ""));
 		File sf = new File("sf.sf2");
 		if (!sf.exists()) {
-			System.out.println("Keine Soundfont gefunden!");
-			System.out.println("Mochten sie die Soundfont \"FluidR3_GM\" herunterladen? [y/n]");
-			Scanner s = new Scanner(System.in);
-			String o = s.nextLine();
-			s.close();
-			if (o.equalsIgnoreCase("") || o.equalsIgnoreCase("y")) {
-				try {
-					ZipInputStream zis = new ZipInputStream(new BufferedInputStream(
-							new URL("https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip").openStream()));
-					ZipEntry ent = zis.getNextEntry();
-					while (ent != null) {
-						if (ent.getName().contains(".sf2")) {
-							FileOutputStream fos = new FileOutputStream(sf);
-							long si = ent.getSize();
-							byte[] buff = new byte[65536];
-							while (si > 0) {
-								if (si > buff.length) {
-									si -= buff.length;
-									zis.read(buff, 0, buff.length);
-									fos.write(buff, 0, buff.length);
-								} else {
-									zis.read(buff, 0, (int) si);
-									fos.write(buff, 0, (int) si);
-									si -= si;
-								}
-							}
-							fos.close();
-							break;
-						}
-						ent = zis.getNextEntry();
+			try {
+				int opt = JOptionPane.showConfirmDialog(null, "Soll die Soundfont \"FluidR3_GM\" herunterladen werden?",
+						"fehlende Soundfont!", JOptionPane.OK_CANCEL_OPTION);
+				if (opt == JOptionPane.OK_OPTION) {
+					if (!downloadSoundfont(sf)) {
+						JOptionPane.showMessageDialog(null, "Die datei konte nicht herunter geladen werden!", "INFO",
+								JOptionPane.ERROR_MESSAGE);
+						System.exit(0);
 					}
-					zis.close();
-				} catch (IOException e) {
-					System.out.println("Download Fehlgeschlagen");
+				} else {
+					JOptionPane.showMessageDialog(null, "Eine Soundfont wird zum ausführen benötigt!", "INFO",
+							JOptionPane.INFORMATION_MESSAGE);
 					System.exit(0);
 				}
-			} else {
-				System.out.println("INFO: Eine Soundfont wird zum ausführen benötigt!");
-				System.exit(0);
+			} catch (Exception e) {
+				System.out.println("Keine Soundfont gefunden!");
+				System.out.println("Mochten sie die Soundfont \"FluidR3_GM\" herunterladen? [y/n]");
+				Scanner s = new Scanner(System.in);
+				String o = s.nextLine();
+				s.close();
+				if (o.equalsIgnoreCase("") || o.equalsIgnoreCase("y")) {
+					if (!downloadSoundfont(sf)) {
+						System.out.println("Die datei konte nicht herunter geladen werden!");
+						System.exit(0);
+					}
+				} else {
+					System.out.println("INFO: Eine Soundfont wird zum ausführen benötigt!");
+					System.exit(0);
+				}
 			}
 		}
 		Options options = new Options();
@@ -240,6 +232,39 @@ public class JavaMain {
 		} else {
 			window = new Window();
 			mqtt = false;
+		}
+	}
+
+	public static boolean downloadSoundfont(File sf) {
+		try {
+			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(
+					new URL("https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip").openStream()));
+			ZipEntry ent = zis.getNextEntry();
+			while (ent != null) {
+				if (ent.getName().contains(".sf2")) {
+					FileOutputStream fos = new FileOutputStream(sf);
+					long si = ent.getSize();
+					byte[] buff = new byte[65536];
+					while (si > 0) {
+						if (si > buff.length) {
+							si -= buff.length;
+							zis.read(buff, 0, buff.length);
+							fos.write(buff, 0, buff.length);
+						} else {
+							zis.read(buff, 0, (int) si);
+							fos.write(buff, 0, (int) si);
+							si -= si;
+						}
+					}
+					fos.close();
+					break;
+				}
+				ent = zis.getNextEntry();
+			}
+			zis.close();
+			return true;
+		} catch (IOException e) {
+			return false;
 		}
 	}
 }

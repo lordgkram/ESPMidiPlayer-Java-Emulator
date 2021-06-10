@@ -9,8 +9,11 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.awt.Desktop.Action;
 import java.awt.Image;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,6 +53,7 @@ public class Window {
 	public JTextArea chat;
 	JSlider volumen;
 	public Image icon;
+	JFrame changeLogWin;
 
 	public Window() {
 		try {
@@ -250,13 +255,23 @@ public class Window {
 		jmiueber.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String text = 	"ProjektionTV Esp32 MidiPlayer - Java Emulator\n" +
-								"v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION + (JavaMain.INDEV ? "-indev" : "") + "\n" +
-								"von gkram\n";
+				String text = "ProjektionTV Esp32 MidiPlayer - Java Emulator\n" + "v" + JavaMain.MAJOR_VERSION + "."
+						+ JavaMain.MINOR_VERSION + (JavaMain.INDEV ? "-indev" : "") + "\n" + "von gkram\n";
 				JOptionPane.showMessageDialog(jf, text, "Über", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(icon));
 			}
 		});
 		jmHilfe.add(jmiueber);
+
+		JMenuItem jmichangeLog = new JMenuItem("Changelog");
+		jmichangeLog.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changeLogWin.setSize(1280, 720);
+				changeLogWin.setVisible(true);
+				changeLogWin.requestFocus();
+			}
+		});
+		jmHilfe.add(jmichangeLog);
 
 		JMenuItem jmiLProjektion = new JMenuItem("Zu ProjektionTV");
 		jmiLProjektion.addActionListener(new ActionListener() {
@@ -278,6 +293,25 @@ public class Window {
 		jmb.add(jmHilfe);
 
 		jf.setJMenuBar(jmb);
+
+		changeLogWin = new JFrame("ProjektionTV Midi Emulator v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION
+				+ "" + (JavaMain.INDEV ? "-indev" : "") + " Changelog");
+		String log = "";
+		try{
+			BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(getClass().getResourceAsStream("/changelog.html")), "utf-8"));
+			String line;
+			while ((line = br.readLine()) != null){
+				log += line + System.lineSeparator();
+			}
+		}catch(Exception e){
+			log = "Changelog konte nicht geladen Werden.";
+		}
+		JEditorPane cl = new JEditorPane("text/html", log);
+		cl.setEditable(false);
+		if (icon != null)
+			changeLogWin.setIconImage(icon);
+		changeLogWin.setContentPane(new JScrollPane(cl));
+		changeLogWin.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
 		jf.setVisible(true);
 	}

@@ -5,12 +5,12 @@ Emulator für [ESP32MidiPlayer](https://github.com/ProjektionTV/Esp32MidiPlayer)
 ## Bauen
 
 ### Windows
-`gradlew.bat getDeps build`
+`gradlew.bat construct`
 ### Linux
-`gradlew getDeps build`
+`gradlew construct`
 
 ## Ausführen
-Zum Ausführen werden die 4 jar files in `build/libs` benötigt sowie eine sountfont im gleichen Ordner wie die 4 jar-Dateien namens `sf.sf2` zum Beispiel [diese](https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip) 
+Zum Ausführen werden die jar datei in `build/libs` benötigt sowie eine sountfont im gleichen Ordner wie die jar namens `sf.sf2` zum Beispiel [diese](https://member.keymusician.com/Member/FluidR3_GM/FluidR3_GM.zip) 
 
 Info: Fals keine `sf.sf2` vorhanden ist fragt das Programm in der Konsole ob eine heruntergeladen werden soll.
 

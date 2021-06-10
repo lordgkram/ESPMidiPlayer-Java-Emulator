@@ -30,6 +30,26 @@ jar {
 	} from configurations.compile into ''
 }
 
-task getDeps(type : Copy) {
-	from sourceSets.main.runtimeClasspath into 'build/libs/'
+task construct(){
+	dependsOn 'uberJar'
+	finalizedBy 'cleanUpConstruct'
+}
+
+task uberJar(type : Zip) {
+	dependsOn 'build'
+	archiveFileName = "javaMidiBuild.jar"
+	destinationDirectory = file("build/libs")
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from (configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }){
+		include "**/*.class"
+		exclude "javaMidi/**"
+    }
+	from zipTree("build/libs/javaMidi.jar")
+}
+
+task cleanUpConstruct(type : Delete){
+	delete "build/libs/javaMidi.jar"
 }
