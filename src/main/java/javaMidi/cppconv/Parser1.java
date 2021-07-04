@@ -131,54 +131,56 @@ public class Parser1 {
     public static void parser1_1(String buffer) {
         System.out.println("Parser1.1: " + buffer);
 
-        if (System.currentTimeMillis() > JavaMain.main.timeout)
-            return;
+        boolean inloop = true;
+        while (inloop && (buffer.length() > 0)) {
+            if (System.currentTimeMillis() > JavaMain.main.timeout)
+                return;
 
-        if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
-            ReadNumberReturn rnr = StrMidiUtil.readNumber(buffer);
-            buffer = rnr.outPut;
-            int length = rnr.number;
-            if (length == 0)
-                length = 4;
-            JavaMain.delay(JavaMain.main.vierBeatZeit / length);
-            if (buffer.length() > 0 && buffer.charAt(0) == '.') {
-                JavaMain.delay((JavaMain.main.vierBeatZeit / length) / 2);
-                buffer = buffer.substring(1);
+            if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
+                ReadNumberReturn rnr = StrMidiUtil.readNumber(buffer);
+                buffer = rnr.outPut;
+                int length = rnr.number;
+                if (length == 0)
+                    length = 4;
+                JavaMain.midiDelay(JavaMain.main.vierBeatZeit / length);
+                if (buffer.length() > 0 && buffer.charAt(0) == '.') {
+                    JavaMain.midiDelay((JavaMain.main.vierBeatZeit / length) / 2);
+                    buffer = buffer.substring(1);
+                }
+                return;
             }
-            return;
-        }
 
-        if(buffer.length() == 0)
-            return;
+            if (buffer.length() == 0)
+                return;
 
-        char note = buffer.charAt(0);
-        buffer = buffer.substring(1);
+            char note = buffer.charAt(0);
+            buffer = buffer.substring(1);
 
-        ReadOktaveOffsetReturn roo = StrMidiUtil.readOktaveOffset(buffer);
-        buffer = roo.str;
-        short oktaveOffset = roo.num;
-        ReadHalbtonReturn rhr = StrMidiUtil.readHalbton(buffer);
-        boolean habtonC = rhr.habltonC;
-        boolean habtonB = rhr.halbtonB;
-        buffer = rhr.str;
-        GetNoteIDReturn gnir = StrMidiUtil.getNoteID(note);
-        short noteID = gnir.note;
-        boolean noteDown = gnir.noteDown;
-        boolean allowHabtonC = gnir.allowHalbtonC;
-        boolean allowHabtonB = gnir.allowHalbtonB;
-        boolean play = true;
-        if (noteID == 2000)
-            play = false;
-        if (note == 'p' || note == 'P')
-            play = false;
-        if (play)
-            MidiInterface.parser2note(StrMidiUtil.convertNote(noteID, oktaveOffset, habtonC, habtonB, allowHabtonC,
-                    allowHabtonB, noteDown));
-        if (buffer.length() != 0)
-            parser1_1(buffer);
-        else {
-            if (play || note == 'p' || note == 'P')
-                JavaMain.delay(JavaMain.main.vierBeatZeit / 4);
+            ReadOktaveOffsetReturn roo = StrMidiUtil.readOktaveOffset(buffer);
+            buffer = roo.str;
+            short oktaveOffset = roo.num;
+            ReadHalbtonReturn rhr = StrMidiUtil.readHalbton(buffer);
+            boolean habtonC = rhr.habltonC;
+            boolean habtonB = rhr.halbtonB;
+            buffer = rhr.str;
+            GetNoteIDReturn gnir = StrMidiUtil.getNoteID(note);
+            short noteID = gnir.note;
+            boolean noteDown = gnir.noteDown;
+            boolean allowHabtonC = gnir.allowHalbtonC;
+            boolean allowHabtonB = gnir.allowHalbtonB;
+            boolean play = true;
+            if (noteID == 2000)
+                play = false;
+            if (note == 'p' || note == 'P')
+                play = false;
+            if (play)
+                MidiInterface.parser2note(StrMidiUtil.convertNote(noteID, oktaveOffset, habtonC, habtonB, allowHabtonC,
+                        allowHabtonB, noteDown));
+            if (buffer.length() == 0){
+                if (play || note == 'p' || note == 'P')
+                    JavaMain.midiDelay(JavaMain.main.vierBeatZeit / 4);
+                inloop = false;
+            }
         }
     }
 }

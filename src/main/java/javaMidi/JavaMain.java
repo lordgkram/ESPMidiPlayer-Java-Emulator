@@ -47,13 +47,15 @@ public class JavaMain {
 	public static String MQTT_MUSIC_OFF_TOPIC = MQTT_MUSIC_ON_TOPIC;
 	public static String MQTT_MUSIC_ON_MASSAGE = "on";
 	public static String MQTT_MUSIC_OFF_MASSAGE = "off";
+	public static String SONG_NOT_EXISTS = "H' E'";
 
+	public static final int MAX_PLAYREQUESTS = 2;
 	public static final int MENGE_PRESET_LIEDER = 16;
 	public static final int MENGE_PRESET_INSTRUMENTE = 8;
 
 	public static final int MAJOR_VERSION = 0;
-	public static final int MINOR_VERSION = 7;
-	public static final boolean INDEV = false;
+	public static final int MINOR_VERSION = 8;
+	public static final boolean INDEV = true;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
 	public static short MIDI_INSTRUMENT_vibes = 11;
@@ -178,6 +180,14 @@ public class JavaMain {
 		} catch (Exception e) {
 			e.printStackTrace();
 			main = new JavaMain(false);
+		}
+	}
+
+	public static void midiDelay(long delay) {
+		if((System.currentTimeMillis() + delay) > main.timeout){
+			delay(main.timeout - System.currentTimeMillis());
+		}else{
+			delay(delay);
 		}
 	}
 

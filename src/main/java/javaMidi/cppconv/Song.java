@@ -15,6 +15,8 @@ public class Song {
             int num = rnr.number;
             if(num >= 0 && num < JavaMain.MENGE_PRESET_LIEDER)
               input = JavaMain.main.presetLieder[num].daten;
+            else
+              input = JavaMain.SONG_NOT_EXISTS;
           }
         }
     

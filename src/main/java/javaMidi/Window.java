@@ -306,6 +306,15 @@ public class Window {
 		}catch(Exception e){
 			log = "Changelog konte nicht geladen Werden.";
 		}
+		try{
+			BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(new URI("https://raw.githubusercontent.com/lordgkram/ESPMidiPlayer-Java-Emulator/master/src/main/resources/changelog.html").toURL().openStream()), "utf-8"));
+			String line;
+			log = "";
+			while ((line = br.readLine()) != null){
+				log += line + System.lineSeparator();
+			}
+		}catch(Exception e){
+		}
 		JEditorPane cl = new JEditorPane("text/html", log);
 		cl.setEditable(false);
 		if (icon != null)
