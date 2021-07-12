@@ -1,0 +1,33 @@
+{
+    "syntax":{
+        "bg":"000000",
+        "currentLine":"444444",
+        "selection":"000088",
+        "caret":"EEEEEE",
+        "lineBorder":"CCCCCC",
+        "lineNumber":"CCCCCC",
+        "token": {
+            "modus": {"fg":"008888", "bold":false, "italic":false, "underline":false},
+            "wiederholung":{"fg":"0000CC", "bold":false, "italic":false, "underline":false},
+            "note":{"fg":"CCCCCC", "bold":false, "italic":false, "underline":false},
+            "lenge":{"fg":"00CC00", "bold":false, "italic":false, "underline":false},
+            "bpm":{"fg":"88CC00", "bold":false, "italic":false, "underline":false},
+            "controll":{"fg":"CC00FF", "bold":false, "italic":false, "underline":false},
+            "preset":{"fg":"0000CC", "bold":false, "italic":false, "underline":false},
+            "instrument":{"fg":"CC00CC", "bold":false, "italic":false, "underline":false},
+            "buffer":{"fg":"008888", "bold":true, "italic":false, "underline":false},
+            "error":{"fg":"CC0000", "bold":true, "italic":false, "underline":false},
+            "error_eol":{"fg":"CC0000", "bold":true, "italic":false, "underline":false},
+            "none":{"fg":"CC0000", "bold":false, "italic":true, "underline":false}
+        }
+    },
+    "changeLog":{
+        "fg":"FFFFFF",
+        "bg":"000000",
+        "person":"00DDDD",
+        "bugfix":"AA0000"
+    },
+    "swing":{
+        "style":3
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "syntax":{
+        "bg":"FFFFFF",
+        "currentLine":"FFFF00",
+        "selection":"00FFFF",
+        "caret":"000000",
+        "lineBorder":"000000",
+        "lineNumber":"000000",
+        "token": {
+            "modus": {"fg":"008888", "bold":false, "italic":false, "underline":false},
+            "wiederholung":{"fg":"0000CC", "bold":false, "italic":false, "underline":false},
+            "note":{"fg":"000000", "bold":false, "italic":false, "underline":false},
+            "lenge":{"fg":"00CC00", "bold":false, "italic":false, "underline":false},
+            "bpm":{"fg":"88CC00", "bold":false, "italic":false, "underline":false},
+            "controll":{"fg":"CC00FF", "bold":false, "italic":false, "underline":false},
+            "preset":{"fg":"0000CC", "bold":false, "italic":false, "underline":false},
+            "instrument":{"fg":"CC00CC", "bold":false, "italic":false, "underline":false},
+            "buffer":{"fg":"008888", "bold":true, "italic":false, "underline":false},
+            "error":{"fg":"CC0000", "bold":true, "italic":false, "underline":false},
+            "error_eol":{"fg":"CC0000", "bold":true, "italic":false, "underline":false},
+            "none":{"fg":"CC0000", "bold":false, "italic":true, "underline":false}
+        }
+    },
+    "changeLog":{
+        "fg":"000000",
+        "bg":"FFFFFF",
+        "person":"00DDDD",
+        "bugfix":"AA0000"
+    },
+    "swing":{
+        "style":4,
+        "clazz":"com.formdev.flatlaf.intellijthemes.FlatArcIJTheme"
+    }
+}

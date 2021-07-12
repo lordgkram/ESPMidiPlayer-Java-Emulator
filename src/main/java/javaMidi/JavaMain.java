@@ -79,6 +79,8 @@ public class JavaMain {
 	public long timeout = 0;
 	public boolean mqtt = true;
 	public Window window;
+	public TXTtoMIDI txtToMidi;
+	public Config config;
 
 	public static void main(String[] args) {
 		System.out.println("loading System v" + JavaMain.MAJOR_VERSION + "." + JavaMain.MINOR_VERSION + ""
@@ -170,20 +172,24 @@ public class JavaMain {
 				if (cli.hasOption("m")) {
 					TOPIC_MIDI = cli.getOptionValue("m");
 				}
-				main = new JavaMain(true);
+				new JavaMain(true);
 			} else {
-				main = new JavaMain(false);
+				new JavaMain(false);
 			}
 			System.out.println("loading MIDI");
 			MIDI.init();
 			Main.setup();
 		} catch (Exception e) {
 			e.printStackTrace();
-			main = new JavaMain(false);
+			new JavaMain(false);
 		}
 	}
 
 	public static void midiDelay(long delay) {
+		if(main.window.shoudStop){
+			main.timeout = System.currentTimeMillis();
+			return;
+		}
 		if((System.currentTimeMillis() + delay) > main.timeout){
 			delay(main.timeout - System.currentTimeMillis());
 		}else{
@@ -192,6 +198,10 @@ public class JavaMain {
 	}
 
 	public static void delay(long delay) {
+		if(main.txtToMidi.recording){
+			main.txtToMidi.currentTime += delay;
+			return;
+		}
 		try {
 			Thread.sleep(delay);
 		} catch (InterruptedException e) {
@@ -200,8 +210,12 @@ public class JavaMain {
 	}
 
 	public JavaMain(boolean doMqtt) {
+		main = this;
 		System.out.println("loading JSON");
 		gson = new Gson();
+		System.out.println("loading Config");
+		config = new Config();
+		txtToMidi = new TXTtoMIDI();
 		activeNotes = new int[129];
 		notenBuffer = new NotenBufferEintrag[NOTEN_BUFFER_LAENGE];
 		for (int i = 0; i < NOTEN_BUFFER_LAENGE; i++)

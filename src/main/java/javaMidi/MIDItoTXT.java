@@ -42,7 +42,6 @@ public class MIDItoTXT {
             int sysPause = (int) ((240000f / ((float) lastBpm)) / tlDiff);
             if (sysPause < 128)
                 out += "" + sysPause + " ";
-            System.out.println(sysPause);
             byte[] data = msg.getMessage();
             if (data.length == 3) {
                 int datan = (data[0] & 0xF0) >> 4;
@@ -92,7 +91,7 @@ public class MIDItoTXT {
             }
             lt = tick;
         }
-        return "-bpm" + bpm + " " + out;
+        return "-bpm" + bpm + " 0 " + out;
     }
 
     public static String note2str(int n) {
