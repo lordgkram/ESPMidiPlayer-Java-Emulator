@@ -55,7 +55,7 @@ public class JavaMain {
 
 	public static final int MAJOR_VERSION = 0;
 	public static final int MINOR_VERSION = 8;
-	public static final boolean INDEV = true;
+	public static final boolean INDEV = false;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
 	public static short MIDI_INSTRUMENT_vibes = 11;
