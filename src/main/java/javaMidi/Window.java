@@ -340,7 +340,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konte nicht geöffnet werden",
+							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 
 			}
@@ -359,7 +359,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konte nicht geöffnet werden",
+							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
@@ -399,7 +399,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konte nicht geöffnet werden",
+							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
@@ -419,7 +419,7 @@ public class Window {
 				log += line + System.lineSeparator();
 			}
 		}catch(Exception e){
-			log = "Changelog konte nicht geladen Werden.";
+			log = "Changelog konnte nicht geladen Werden.";
 		}
 		try{
 			BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(new URI("https://raw.githubusercontent.com/lordgkram/ESPMidiPlayer-Java-Emulator/master/src/main/resources/changelog.html").toURL().openStream()), "utf-8"));

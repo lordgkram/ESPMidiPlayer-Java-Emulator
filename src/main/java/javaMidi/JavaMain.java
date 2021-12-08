@@ -92,7 +92,7 @@ public class JavaMain {
 						"fehlende Soundfont!", JOptionPane.OK_CANCEL_OPTION);
 				if (opt == JOptionPane.OK_OPTION) {
 					if (!downloadSoundfont(sf)) {
-						JOptionPane.showMessageDialog(null, "Die datei konte nicht herunter geladen werden!", "INFO",
+						JOptionPane.showMessageDialog(null, "Die datei konnte nicht herunter geladen werden!", "INFO",
 								JOptionPane.ERROR_MESSAGE);
 						System.exit(0);
 					}
@@ -109,7 +109,7 @@ public class JavaMain {
 				s.close();
 				if (o.equalsIgnoreCase("") || o.equalsIgnoreCase("y")) {
 					if (!downloadSoundfont(sf)) {
-						System.out.println("Die datei konte nicht herunter geladen werden!");
+						System.out.println("Die datei konnte nicht herunter geladen werden!");
 						System.exit(0);
 					}
 				} else {
