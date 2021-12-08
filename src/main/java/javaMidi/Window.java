@@ -340,7 +340,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 
 			}
@@ -359,7 +359,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
@@ -399,7 +399,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
