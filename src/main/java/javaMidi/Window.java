@@ -269,8 +269,8 @@ public class Window {
 		});
 		jmTools.add(jmiMidiFileConverter);
 
-		JMenuItem jmiTWFormetter = new JMenuItem("Twitch Formetter");
-		jmiTWFormetter.addActionListener(new ActionListener() {
+		JMenuItem jmiTWFormatter = new JMenuItem("Twitch Formatter");
+		jmiTWFormatter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame imp = getTwitchFormatter();
@@ -281,7 +281,7 @@ public class Window {
 				imp.setVisible(true);
 			}
 		});
-		jmTools.add(jmiTWFormetter);
+		jmTools.add(jmiTWFormatter);
 
 		jmiMidiExport = new JMenuItem(".mid export");
 		jmiMidiExport.addActionListener(new ActionListener() {
