@@ -502,7 +502,7 @@ public class Window {
 		});
 		exportUICfgCfgPnl.add(exportUICfgCfgFileChoose);
 
-		exportUICfgCfgPnl.add(new JLabel("Max konvertirungszeit:"));
+		exportUICfgCfgPnl.add(new JLabel("Max Konvertierungszeit:"));
 		exportUICfgCfgConvTime = new JSpinner();
 		exportUICfgCfgPnl.add(exportUICfgCfgConvTime);
 		exportUICfgCfgConvTime.setValue(16);
