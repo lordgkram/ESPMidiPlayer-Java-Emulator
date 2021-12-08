@@ -328,7 +328,7 @@ public class Window {
 
 		JMenu jmHilfe = new JMenu("Hilfe");
 
-		JMenuItem jmiLNoten = new JMenuItem("Noten dukumentation");
+		JMenuItem jmiLNoten = new JMenuItem("Noten Dokumentation");
 		jmiLNoten.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -347,7 +347,7 @@ public class Window {
 		});
 		jmHilfe.add(jmiLNoten);
 
-		JMenuItem jmiLEmu = new JMenuItem("Emulator dukumentation");
+		JMenuItem jmiLEmu = new JMenuItem("Emulator Dokumentation");
 		jmiLEmu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
