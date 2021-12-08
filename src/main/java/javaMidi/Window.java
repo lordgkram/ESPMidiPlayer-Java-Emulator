@@ -139,8 +139,8 @@ public class Window {
 		maxPlayTime.setValue(16);
 		JSpinner prio = new JSpinner();
 		prio.setValue(0);
-		JCheckBox doBuffer = new JCheckBox("Aktivire Buffer");
-		JCheckBox doAdmin = new JCheckBox("Aktivire Admin");
+		JCheckBox doBuffer = new JCheckBox("Aktiviere Buffer");
+		JCheckBox doAdmin = new JCheckBox("Aktiviere Admin");
 		volumen = new JSlider(JSlider.HORIZONTAL, 0, 127, 127);
 		timeText = new JLabel("00:00");
 		timeText.setHorizontalTextPosition(JLabel.CENTER);
