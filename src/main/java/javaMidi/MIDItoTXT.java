@@ -33,7 +33,7 @@ public class MIDItoTXT {
         int lastBpm = bpm;
         int ln = 2000;
         long lt = 0;
-        int letzterChanal = 0;
+        int letzterChannel = 0;
         for (int i = 0; i < t.size(); i++) {
             MidiEvent ev = t.get(i);
             MidiMessage msg = ev.getMessage();
@@ -45,10 +45,10 @@ public class MIDItoTXT {
             byte[] data = msg.getMessage();
             if (data.length == 3) {
                 int datan = (data[0] & 0xF0) >> 4;
-                int chanal = (data[0] & 0xF);
-                if(chanal != letzterChanal){
-                    letzterChanal = chanal;
-                    out += "k" + (chanal + 1);
+                int channel = (data[0] & 0xF);
+                if(channel != letzterChannel){
+                    letzterChannel = channel;
+                    out += "k" + (channel + 1);
                 }
                 if (datan == 0b1000 || datan == 0b1001) {
                     // note on off
@@ -75,10 +75,10 @@ public class MIDItoTXT {
                 }
             } else if (data.length == 2) {
                 int datan = (data[0] & 0xF0) >> 4;
-                int chanal = (data[0] & 0xF);
-                if(chanal != letzterChanal){
-                    letzterChanal = chanal;
-                    out += "k" + (chanal + 1);
+                int channel = (data[0] & 0xF);
+                if(channel != letzterChannel){
+                    letzterChannel = channel;
+                    out += "k" + (channel + 1);
                 }
                 if (datan == 0b1100) {
                     // prg change

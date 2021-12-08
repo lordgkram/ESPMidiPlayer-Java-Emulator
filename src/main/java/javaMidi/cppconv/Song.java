@@ -22,7 +22,7 @@ public class Song {
     
         System.out.println("PLAY ERKANNT");
     
-        JavaMain.main.currentChanal = JavaMain.DEFALT_MIDI_CHANAL;
+        JavaMain.main.currentChannel = JavaMain.DEFALT_MIDI_CHANNEL;
     
         while (input.startsWith(" "))
           input = input.substring(1);

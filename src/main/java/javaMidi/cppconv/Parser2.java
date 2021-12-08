@@ -51,7 +51,7 @@ public class Parser2 {
                         buffer = rnr.outPut;
                         short nv = (short) rnr.number;
                         if (nv < 128 && nv >= 0)
-                            MIDI.sendControlChange((short) 7, nv, JavaMain.main.currentChanal);
+                            MIDI.sendControlChange((short) 7, nv, JavaMain.main.currentChannel);
                     }
                 } else if (note == 'x' || note == 'X') {
                     if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
@@ -59,7 +59,7 @@ public class Parser2 {
                         buffer = rnr.outPut;
                         short nv = (short) rnr.number;
                         if (nv < 128 && nv >= 0)
-                            MIDI.sendControlChange((short) 0, nv, JavaMain.main.currentChanal);
+                            MIDI.sendControlChange((short) 0, nv, JavaMain.main.currentChannel);
                     }
                 } else if (note == 'y' || note == 'Y') {
                     if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
@@ -67,7 +67,7 @@ public class Parser2 {
                         buffer = rnr.outPut;
                         short nv = (short) rnr.number;
                         if (nv < 128 && nv >= 0)
-                            MIDI.sendControlChange((short) 32, nv, JavaMain.main.currentChanal);
+                            MIDI.sendControlChange((short) 32, nv, JavaMain.main.currentChannel);
                     }
                 } else if (note == 'j' || note == 'J') {
                     if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
@@ -75,7 +75,7 @@ public class Parser2 {
                         buffer = rnr.outPut;
                         short nv = (short) rnr.number;
                         if (nv < 128 && nv >= 0)
-                            MIDI.sendControlChange((short) 72, nv, JavaMain.main.currentChanal);
+                            MIDI.sendControlChange((short) 72, nv, JavaMain.main.currentChannel);
                     }
                 } else if (note == 'o' || note == 'O') {
                     if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
@@ -83,18 +83,18 @@ public class Parser2 {
                         buffer = rnr.outPut;
                         short nv = (short) rnr.number;
                         if (nv < 128 && nv >= 0)
-                            MIDI.sendControlChange((short) 73, nv, JavaMain.main.currentChanal);
+                            MIDI.sendControlChange((short) 73, nv, JavaMain.main.currentChannel);
                     }
                 } else if (note == 'i' || note == 'I') {
                     buffer = SongUtil.readInstrument(buffer);
                 }
 
-                else if (JavaMain.ALLOW_MULTI_CHANAL_MIDI && (note == 'k' || note == 'K')) {
+                else if (JavaMain.ALLOW_MULTI_CHANNEL_MIDI && (note == 'k' || note == 'K')) {
                     if (buffer.length() > 0 && StrMidiUtil.isNumber(buffer.charAt(0))) {
                         ReadNumberReturn rnr = StrMidiUtil.readNumber(buffer);
                         buffer = rnr.outPut;
                         short nc = (short) rnr.number;
-                        JavaMain.main.currentChanal = nc;
+                        JavaMain.main.currentChannel = nc;
                     }
                 }
 

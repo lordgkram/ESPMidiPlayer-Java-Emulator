@@ -37,12 +37,12 @@ public class JavaMain {
 	public static String MQTT_IRC_TX = "irc/tx";
 	public static String TOPIC_MIDI = "playmidi";
 
-	public static final short DEFALT_MIDI_CHANAL = 1;
+	public static final short DEFALT_MIDI_CHANNEL = 1;
 	public static final boolean ALLOW_PARSER_2 = true;
 	public static final int DEFALT_BPM = 240;
 	public static int NOTEN_BUFFER_LAENGE = 8;
 	public static final boolean ENABLE_PARSER_1_1 = true;
-	public static final boolean ALLOW_MULTI_CHANAL_MIDI = true;
+	public static final boolean ALLOW_MULTI_CHANNEL_MIDI = true;
 	public static String MQTT_MUSIC_ON_TOPIC = "stream/music";
 	public static String MQTT_MUSIC_OFF_TOPIC = MQTT_MUSIC_ON_TOPIC;
 	public static String MQTT_MUSIC_ON_MASSAGE = "on";
@@ -71,7 +71,7 @@ public class JavaMain {
 	public Instrument instrumente[];
 	public Lied presetLieder[];
 	public short zuletztGenannteNote = 2000;
-	public short currentChanal = DEFALT_MIDI_CHANAL;
+	public short currentChannel = DEFALT_MIDI_CHANNEL;
 	public boolean parserV2 = false;
 	public int bpm = DEFALT_BPM;
 	public int activeNotes[];
