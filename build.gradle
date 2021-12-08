@@ -54,6 +54,8 @@ task uberJar(type : Zip) {
 		include "**/*.dtd"
 		include "**/*.json"
 		include "**/*.dll"
+		include "META-INF/maven/**"
+		include "META-INF/services/**"
 		exclude "javaMidi/**"
     }
 	from zipTree("build/libs/javaMidi.jar")

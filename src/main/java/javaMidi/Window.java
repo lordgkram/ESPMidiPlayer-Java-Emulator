@@ -55,11 +55,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import javaMidi.classC.PsClient;
 import javaMidi.cppconv.Interface;
 
 public class Window {
@@ -118,6 +124,18 @@ public class Window {
 		theme.addUiToHandle(jf);
 		if (icon != null)
 			jf.setIconImage(icon);
+
+		if(JavaMain.mqttOut){
+			MqttClientPersistence persistence = new MemoryPersistence();
+			try {
+				JavaMain.main.client = new MqttClient(JavaMain.BROKER, JavaMain.CLIENT_ID, persistence);
+				MqttConnectOptions mqttOpts = new MqttConnectOptions();
+				mqttOpts.setCleanSession(true);
+				JavaMain.main.client.connect(mqttOpts);
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}
+		}
 
 		input = new RSyntaxTextArea(10, 500);
 		input.setEditable(true);
@@ -204,7 +222,10 @@ public class Window {
 								try {
 									o.addProperty("midi", t);
 									timeSegmentStart = System.currentTimeMillis();
-									Interface.mqttCallback(JavaMain.TOPIC_MIDI, JavaMain.main.gson.toJson(o));
+									if(!JavaMain.mqttOut)
+										Interface.mqttCallback(JavaMain.TOPIC_MIDI, JavaMain.main.gson.toJson(o));
+									else
+										PsClient.publish(JavaMain.TOPIC_MIDI, JavaMain.main.gson.toJson(o));
 									jf.repaint();
 								} catch (Exception e) {
 									e.printStackTrace();

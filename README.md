@@ -32,4 +32,5 @@ Um den Mqtt-Player Modus zu aktivieren muss man das Argument `--mqtt` anhängen.
 * `-h/--help` - zeigt die hilfe
 * `-i/--clientID (id)` - Mqtt-Client id
 * `-m/--topicMidi (topic)` - der mqtt-topic für den playmidi trafic
-* `-q/--mqtt` - soll mqtt genutzt werden
+* `-q/--mqtt` - soll mqtt als eingang genutzt werden
+* `-o/--mqttOut` - soll die ui als Fernbedinung genutzt werden

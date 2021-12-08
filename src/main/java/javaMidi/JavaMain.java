@@ -48,14 +48,15 @@ public class JavaMain {
 	public static String MQTT_MUSIC_ON_MASSAGE = "on";
 	public static String MQTT_MUSIC_OFF_MASSAGE = "off";
 	public static String SONG_NOT_EXISTS = "H' E'";
+	public static boolean mqttOut = false;
 
 	public static final int MAX_PLAYREQUESTS = 2;
 	public static final int MENGE_PRESET_LIEDER = 16;
 	public static final int MENGE_PRESET_INSTRUMENTE = 8;
 
 	public static final int MAJOR_VERSION = 0;
-	public static final int MINOR_VERSION = 8;
-	public static final boolean INDEV = false;
+	public static final int MINOR_VERSION = 10;
+	public static final boolean INDEV = true;
 
 	public static short MIDI_INSTRUMENT_piano = 0;
 	public static short MIDI_INSTRUMENT_vibes = 11;
@@ -77,7 +78,6 @@ public class JavaMain {
 	public int activeNotes[];
 	public int vierBeatZeit = 1000;
 	public long timeout = 0;
-	public boolean mqtt = true;
 	public Window window;
 	public TXTtoMIDI txtToMidi;
 	public Config config;
@@ -139,7 +139,7 @@ public class JavaMain {
 		optNBL.setArgs(1);
 		optNBL.setLongOpt("noteBufferLenght");
 		options.addOption(optNBL);
-		Option optMqtt = new Option("q", "if Mqtt should be used");
+		Option optMqtt = new Option("q", "if Mqtt should be used as an input");
 		optMqtt.setArgs(0);
 		optMqtt.setLongOpt("mqtt");
 		options.addOption(optMqtt);
@@ -147,6 +147,10 @@ public class JavaMain {
 		optHelp.setArgs(0);
 		optHelp.setLongOpt("help");
 		options.addOption(optHelp);
+		Option optRemt = new Option("o", "if the ui should be used as an remote controll");
+		optRemt.setArgs(0);
+		optRemt.setLongOpt("mqttOut");
+		options.addOption(optRemt);
 		DefaultParser parser = new DefaultParser();
 		try {
 			CommandLine cli = parser.parse(options, args);
@@ -159,19 +163,20 @@ public class JavaMain {
 			if (cli.hasOption("a")) {
 				NOTEN_BUFFER_LAENGE = Integer.parseInt(cli.getOptionValue("a"));
 			}
+			if (cli.hasOption("b")) {
+				BROKER = cli.getOptionValue("b");
+			}
+			if (cli.hasOption("i")) {
+				CLIENT_ID = cli.getOptionValue("i");
+			}
+			if (cli.hasOption("c")) {
+				MQTT_IRC_TX = cli.getOptionValue("c");
+			}
+			if (cli.hasOption("m")) {
+				TOPIC_MIDI = cli.getOptionValue("m");
+			}
+			mqttOut = cli.hasOption("o");
 			if (cli.hasOption("q")) {
-				if (cli.hasOption("b")) {
-					BROKER = cli.getOptionValue("b");
-				}
-				if (cli.hasOption("i")) {
-					CLIENT_ID = cli.getOptionValue("i");
-				}
-				if (cli.hasOption("c")) {
-					MQTT_IRC_TX = cli.getOptionValue("c");
-				}
-				if (cli.hasOption("m")) {
-					TOPIC_MIDI = cli.getOptionValue("m");
-				}
 				new JavaMain(true);
 			} else {
 				new JavaMain(false);
@@ -228,6 +233,7 @@ public class JavaMain {
 			presetLieder[i] = new Lied();
 		if (doMqtt) {
 			System.out.println("loading MQTT");
+			mqttOut = true;
 			MqttClientPersistence persistence = new MemoryPersistence();
 			try {
 				client = new MqttClient(BROKER, CLIENT_ID, persistence);
@@ -255,7 +261,6 @@ public class JavaMain {
 			}
 		} else {
 			window = new Window();
-			mqtt = false;
 		}
 	}
 

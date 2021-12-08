@@ -10,7 +10,7 @@ import javaMidi.JavaMain;
 public class PsClient {
 
     public static void publish (String t, String d){
-        if(JavaMain.main.mqtt){
+        if(JavaMain.mqttOut){
             MqttMessage msg = new MqttMessage();
             try{
                 msg.setPayload(d.getBytes("utf-8"));
