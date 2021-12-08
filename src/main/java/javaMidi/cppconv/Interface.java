@@ -145,7 +145,7 @@ public class Interface {
                     + JavaMain.main.notenBuffer[bufferID].daten.length() + "/"
                     + JavaMain.main.notenBuffer[bufferID].maximaleLaenge + ").");
               } else {
-                schreibeChatNachricht("(MIDI) @" + nutzer + " puffer konte nicht erschaffen werden.");
+                schreibeChatNachricht("(MIDI) @" + nutzer + " puffer konnte nicht erschaffen werden.");
               }
             } else {
               // spiele daten

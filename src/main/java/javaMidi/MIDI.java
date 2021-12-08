@@ -36,72 +36,72 @@ public class MIDI {
 		}
 	}
 
-	public static void sendControlChange(short cn, short cv, short chanal) {
-		if (chanal < 1 || chanal > 16)
+	public static void sendControlChange(short cn, short cv, short channel) {
+		if (channel < 1 || channel > 16)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{
-				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, chanal - 1, cn, cv), JavaMain.main.txtToMidi.currentTime));
+				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, channel - 1, cn, cv), JavaMain.main.txtToMidi.currentTime));
 			}catch(InvalidMidiDataException e){}
 			return;
 		}
 		if (cn == 7) {
-			synth.getChannels()[chanal - 1].controlChange(cn, (int) (cv * volumeF));
-			volume[chanal - 1] = cv;
+			synth.getChannels()[channel - 1].controlChange(cn, (int) (cv * volumeF));
+			volume[channel - 1] = cv;
 			return;
 		}
-		synth.getChannels()[chanal - 1].controlChange(cn, cv);
+		synth.getChannels()[channel - 1].controlChange(cn, cv);
 	}
 
-	public static void sendProgramChange(short Instrument, short chanal) {
-		if (chanal < 1 || chanal > 16)
+	public static void sendProgramChange(short Instrument, short channel) {
+		if (channel < 1 || channel > 16)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{
-				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, chanal - 1, Instrument, 0), JavaMain.main.txtToMidi.currentTime));
+				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channel - 1, Instrument, 0), JavaMain.main.txtToMidi.currentTime));
 			}catch(InvalidMidiDataException e){}
 			return;
 		}
-		synth.getChannels()[chanal - 1].programChange(Instrument);
+		synth.getChannels()[channel - 1].programChange(Instrument);
 	}
 
-	public static void sendNoteOn(short note, short velocity, short chanal) {
+	public static void sendNoteOn(short note, short velocity, short channel) {
 		if(JavaMain.main.window.shoudStop)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{
-				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, chanal - 1, note, velocity), JavaMain.main.txtToMidi.currentTime));
+				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel - 1, note, velocity), JavaMain.main.txtToMidi.currentTime));
 			}catch(InvalidMidiDataException e){}
 			return;
 		}
-		if (chanal < 1 || chanal > 16)
+		if (channel < 1 || channel > 16)
 			return;
-		synth.getChannels()[chanal - 1].noteOn(note, velocity);
+		synth.getChannels()[channel - 1].noteOn(note, velocity);
 	}
 
-	public static void sendNoteOff(short note, short velocity, short chanal) {
-		if (chanal < 1 || chanal > 16)
+	public static void sendNoteOff(short note, short velocity, short channel) {
+		if (channel < 1 || channel > 16)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{
-				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, chanal - 1, note, velocity), JavaMain.main.txtToMidi.currentTime));
+				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel - 1, note, velocity), JavaMain.main.txtToMidi.currentTime));
 			}catch(InvalidMidiDataException e){}
 			return;
 		}
-		synth.getChannels()[chanal - 1].noteOff(note, velocity);
+		synth.getChannels()[channel - 1].noteOff(note, velocity);
 	}
 
-	public static void sendPitchBend(int val, short chanal) {
-		if (chanal < 1 || chanal > 16)
+	public static void sendPitchBend(int val, short channel) {
+		if (channel < 1 || channel > 16)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{
 				int d = val + 8192;
-				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.PITCH_BEND, chanal - 1, (d & 0xFF), (d & 0xFF00) >> 8), JavaMain.main.txtToMidi.currentTime));
+				JavaMain.main.txtToMidi.track.add(new MidiEvent(new ShortMessage(ShortMessage.PITCH_BEND, channel - 1, (d & 0xFF), (d & 0xFF00) >> 8), JavaMain.main.txtToMidi.currentTime));
 			}catch(InvalidMidiDataException e){}
 			return;
 		}
-		synth.getChannels()[chanal - 1].setPitchBend(val + 8192);
+		synth.getChannels()[channel - 1].setPitchBend(val + 8192);
 	}
 
 }

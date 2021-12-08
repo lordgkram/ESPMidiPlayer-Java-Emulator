@@ -6,14 +6,14 @@ import javaMidi.MIDI;
 public class MidiInterface {
   public static void parser2note(short note) {
     JavaMain.main.zuletztGenannteNote = note;
-    if (((JavaMain.main.activeNotes[note] >> JavaMain.main.currentChanal) & 1) != 1) {
+    if (((JavaMain.main.activeNotes[note] >> JavaMain.main.currentChannel) & 1) != 1) {
       // start note
-      JavaMain.main.activeNotes[note] |= (1 << JavaMain.main.currentChanal);
-      MIDI.sendNoteOn(note, (short) 127, JavaMain.main.currentChanal);
+      JavaMain.main.activeNotes[note] |= (1 << JavaMain.main.currentChannel);
+      MIDI.sendNoteOn(note, (short) 127, JavaMain.main.currentChannel);
     } else {
       // stop note
-      JavaMain.main.activeNotes[note] &= ~(1 << JavaMain.main.currentChanal);
-      MIDI.sendNoteOff(note, (short) 0, JavaMain.main.currentChanal);
+      JavaMain.main.activeNotes[note] &= ~(1 << JavaMain.main.currentChannel);
+      MIDI.sendNoteOff(note, (short) 0, JavaMain.main.currentChannel);
     }
   }
 
@@ -32,9 +32,9 @@ public class MidiInterface {
   }
 
   public static void playNote(short note, int length) {
-    MIDI.sendNoteOn(note, (short) 127, JavaMain.main.currentChanal);
+    MIDI.sendNoteOn(note, (short) 127, JavaMain.main.currentChannel);
     JavaMain.delay(JavaMain.main.vierBeatZeit / length);
-    MIDI.sendNoteOff(note, (short) 0, JavaMain.main.currentChanal);
+    MIDI.sendNoteOff(note, (short) 0, JavaMain.main.currentChannel);
   }
 
   public static void playNote(int note, int length) {

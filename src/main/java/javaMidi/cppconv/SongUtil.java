@@ -12,15 +12,15 @@ public class SongUtil {
             s = rnr.outPut;
             short midiInstrument = (short) rnr.number;
             if (midiInstrument < 128)
-                MIDI.sendProgramChange(midiInstrument, JavaMain.main.currentChanal);
+                MIDI.sendProgramChange(midiInstrument, JavaMain.main.currentChannel);
         }
 
         for (int i = 0; i < JavaMain.MENGE_PRESET_INSTRUMENTE; i++) {
             if (s.startsWith(JavaMain.main.instrumente[i].name)) {
                 s = s.substring(JavaMain.main.instrumente[i].name.length());
-                MIDI.sendProgramChange(JavaMain.main.instrumente[i].instrument, JavaMain.main.currentChanal);
-                MIDI.sendControlChange((short) 0, JavaMain.main.instrumente[i].bank_MSB, JavaMain.main.currentChanal); // MSB
-                MIDI.sendControlChange((short) 32, JavaMain.main.instrumente[i].bank_LSB, JavaMain.main.currentChanal); // LSB
+                MIDI.sendProgramChange(JavaMain.main.instrumente[i].instrument, JavaMain.main.currentChannel);
+                MIDI.sendControlChange((short) 0, JavaMain.main.instrumente[i].bank_MSB, JavaMain.main.currentChannel); // MSB
+                MIDI.sendControlChange((short) 32, JavaMain.main.instrumente[i].bank_LSB, JavaMain.main.currentChannel); // LSB
             }
         }
         return s;

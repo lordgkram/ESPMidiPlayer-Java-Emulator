@@ -139,8 +139,8 @@ public class Window {
 		maxPlayTime.setValue(16);
 		JSpinner prio = new JSpinner();
 		prio.setValue(0);
-		JCheckBox doBuffer = new JCheckBox("Aktivire Buffer");
-		JCheckBox doAdmin = new JCheckBox("Aktivire Admin");
+		JCheckBox doBuffer = new JCheckBox("Aktiviere Buffer");
+		JCheckBox doAdmin = new JCheckBox("Aktiviere Admin");
 		volumen = new JSlider(JSlider.HORIZONTAL, 0, 127, 127);
 		timeText = new JLabel("00:00");
 		timeText.setHorizontalTextPosition(JLabel.CENTER);
@@ -269,8 +269,8 @@ public class Window {
 		});
 		jmTools.add(jmiMidiFileConverter);
 
-		JMenuItem jmiTWFormetter = new JMenuItem("Twitch Formetter");
-		jmiTWFormetter.addActionListener(new ActionListener() {
+		JMenuItem jmiTWFormatter = new JMenuItem("Twitch Formatter");
+		jmiTWFormatter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame imp = getTwitchFormatter();
@@ -281,7 +281,7 @@ public class Window {
 				imp.setVisible(true);
 			}
 		});
-		jmTools.add(jmiTWFormetter);
+		jmTools.add(jmiTWFormatter);
 
 		jmiMidiExport = new JMenuItem(".mid export");
 		jmiMidiExport.addActionListener(new ActionListener() {
@@ -328,7 +328,7 @@ public class Window {
 
 		JMenu jmHilfe = new JMenu("Hilfe");
 
-		JMenuItem jmiLNoten = new JMenuItem("Noten dukumentation");
+		JMenuItem jmiLNoten = new JMenuItem("Noten Dokumentation");
 		jmiLNoten.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -340,14 +340,14 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://github.com/ProjektionTV/Esp32MidiPlayer#playmidi-syntax\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 
 			}
 		});
 		jmHilfe.add(jmiLNoten);
 
-		JMenuItem jmiLEmu = new JMenuItem("Emulator dukumentation");
+		JMenuItem jmiLEmu = new JMenuItem("Emulator Dokumentation");
 		jmiLEmu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -359,7 +359,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://github.com/lordgkram/ESPMidiPlayer-Java-Emulator#esp32midiplayer-java-emulator\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
@@ -399,7 +399,7 @@ public class Window {
 					}
 				else
 					JOptionPane.showMessageDialog(jf,
-							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konte nicht geofnet werden",
+							(Object) "Die url: \"https://www.twitch.tv/projektiontv\" konnte nicht geöffnet werden",
 							"Fehler", JOptionPane.WARNING_MESSAGE, new ImageIcon(icon));
 			}
 		});
@@ -419,7 +419,7 @@ public class Window {
 				log += line + System.lineSeparator();
 			}
 		}catch(Exception e){
-			log = "Changelog konte nicht geladen Werden.";
+			log = "Changelog konnte nicht geladen Werden.";
 		}
 		try{
 			BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(new URI("https://raw.githubusercontent.com/lordgkram/ESPMidiPlayer-Java-Emulator/master/src/main/resources/changelog.html").toURL().openStream()), "utf-8"));
@@ -502,7 +502,7 @@ public class Window {
 		});
 		exportUICfgCfgPnl.add(exportUICfgCfgFileChoose);
 
-		exportUICfgCfgPnl.add(new JLabel("Max konvertirungszeit:"));
+		exportUICfgCfgPnl.add(new JLabel("Max Konvertierungszeit:"));
 		exportUICfgCfgConvTime = new JSpinner();
 		exportUICfgCfgPnl.add(exportUICfgCfgConvTime);
 		exportUICfgCfgConvTime.setValue(16);
