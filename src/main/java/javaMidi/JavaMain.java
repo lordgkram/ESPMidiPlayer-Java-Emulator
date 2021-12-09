@@ -177,16 +177,16 @@ public class JavaMain {
 			}
 			mqttOut = cli.hasOption("o");
 			if (cli.hasOption("q")) {
-				new JavaMain(true);
+				new JavaMain(Mode.MQTT);
 			} else {
-				new JavaMain(false);
+				new JavaMain(Mode.GUI);
 			}
 			System.out.println("loading MIDI");
 			MIDI.init();
 			Main.setup();
 		} catch (Exception e) {
 			e.printStackTrace();
-			new JavaMain(false);
+			new JavaMain(Mode.GUI);
 		}
 	}
 
@@ -214,7 +214,7 @@ public class JavaMain {
 		}
 	}
 
-	public JavaMain(boolean doMqtt) {
+	public JavaMain(Mode mode) {
 		main = this;
 		System.out.println("loading JSON");
 		gson = new Gson();
@@ -231,36 +231,40 @@ public class JavaMain {
 		presetLieder = new Lied[MENGE_PRESET_LIEDER];
 		for (int i = 0; i < MENGE_PRESET_LIEDER; i++)
 			presetLieder[i] = new Lied();
-		if (doMqtt) {
-			System.out.println("loading MQTT");
-			mqttOut = true;
-			MqttClientPersistence persistence = new MemoryPersistence();
-			try {
-				client = new MqttClient(BROKER, CLIENT_ID, persistence);
-				MqttConnectOptions mqttOpts = new MqttConnectOptions();
-				mqttOpts.setCleanSession(true);
-				client.setCallback(new MqttCallback() {
-					@Override
-					public void messageArrived(String topic, MqttMessage message) throws Exception {
-						Interface.mqttCallback(topic, new String(message.getPayload()));
-					}
 
-					@Override
-					public void deliveryComplete(IMqttDeliveryToken token) {
-					}
+		switch (mode){
+			case MQTT:
+				System.out.println("loading MQTT");
+				mqttOut = true;
+				MqttClientPersistence persistence = new MemoryPersistence();
+				try {
+					client = new MqttClient(BROKER, CLIENT_ID, persistence);
+					MqttConnectOptions mqttOpts = new MqttConnectOptions();
+					mqttOpts.setCleanSession(true);
+					client.setCallback(new MqttCallback() {
+						@Override
+						public void messageArrived(String topic, MqttMessage message) throws Exception {
+							Interface.mqttCallback(topic, new String(message.getPayload()));
+						}
 
-					@Override
-					public void connectionLost(Throwable cause) {
-						cause.printStackTrace();
-					}
-				});
-				client.connect(mqttOpts);
-				client.subscribe(TOPIC_MIDI);
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}
-		} else {
-			window = new Window();
+						@Override
+						public void deliveryComplete(IMqttDeliveryToken token) {
+						}
+
+						@Override
+						public void connectionLost(Throwable cause) {
+							cause.printStackTrace();
+						}
+					});
+					client.connect(mqttOpts);
+					client.subscribe(TOPIC_MIDI);
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}
+				break;
+			case GUI:
+				window = new Window();
+				break;
 		}
 	}
 
