@@ -1,5 +1,6 @@
 package javaMidi;
 
+import javaMidi.tcpmode.AsyncTcpServer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -275,7 +276,17 @@ public class JavaMain {
 				break;
 			case TCP:
 				System.out.println("loading TCP");
+				startTcpServerOnPort(4242);
 				break;
+		}
+	}
+
+	private void startTcpServerOnPort(int port) {
+		AsyncTcpServer tcpServer = new AsyncTcpServer();
+		try {
+			tcpServer.listenOnPort(port);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
