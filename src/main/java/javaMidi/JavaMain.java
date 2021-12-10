@@ -38,6 +38,8 @@ public class JavaMain {
 	public static String MQTT_IRC_TX = "irc/tx";
 	public static String TOPIC_MIDI = "playmidi";
 
+	public static int TCP_SERVER_PORT = 4242;
+
 	public static final short DEFALT_MIDI_CHANNEL = 1;
 	public static final boolean ALLOW_PARSER_2 = true;
 	public static final int DEFALT_BPM = 240;
@@ -154,7 +156,8 @@ public class JavaMain {
 		options.addOption(optRemt);
 
 		Option optTcp = new Option("t", "if TCP should be used as an input");
-		optTcp.setArgs(0);
+		optTcp.setOptionalArg(true);
+		optTcp.setArgs(1);
 		optTcp.setLongOpt("tcp");
 		options.addOption(optTcp);
 
@@ -186,6 +189,8 @@ public class JavaMain {
 			if (cli.hasOption("q")) {
 				new JavaMain(Mode.MQTT);
 			} else if (cli.hasOption("t")){
+				String port = cli.getOptionValue("t");
+				TCP_SERVER_PORT = port == null ? TCP_SERVER_PORT : Integer.parseInt(port);
 				new JavaMain(Mode.TCP);
 			} else {
 				new JavaMain(Mode.GUI);
@@ -276,7 +281,7 @@ public class JavaMain {
 				break;
 			case TCP:
 				System.out.println("loading TCP");
-				startTcpServerOnPort(4242);
+				startTcpServerOnPort(TCP_SERVER_PORT);
 				break;
 		}
 	}
