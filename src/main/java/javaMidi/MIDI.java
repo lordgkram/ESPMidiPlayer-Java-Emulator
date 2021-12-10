@@ -66,7 +66,7 @@ public class MIDI {
 	}
 
 	public static void sendNoteOn(short note, short velocity, short channel) {
-		if(JavaMain.main.window.shoudStop)
+		if(JavaMain.main.window != null && JavaMain.main.window.shoudStop)
 			return;
 		if(JavaMain.main.txtToMidi.recording){
 			try{

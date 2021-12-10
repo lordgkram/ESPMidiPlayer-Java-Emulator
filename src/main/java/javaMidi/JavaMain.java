@@ -200,7 +200,7 @@ public class JavaMain {
 	}
 
 	public static void midiDelay(long delay) {
-		if(main.window.shoudStop){
+		if(main.window != null && main.window.shoudStop){
 			main.timeout = System.currentTimeMillis();
 			return;
 		}

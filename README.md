@@ -20,6 +20,10 @@ Um den Mqtt-Player Modus zu aktivieren, muss man das Argument `--mqtt` anhängen
 ### TCP Mode
 Um den TCP-Player Modus zu aktivieren, muss man das Argument `--tcp` anhängen. z.B.: `java -jar javaMidi.jar --tcp`
 
+Um es unter Linux zu testen, kann z.B. der folgende Befehl genutzt werden:
+
+`echo "a c ac" | nc 127.0.0.1 4242`
+
 ## UI Erklärung
 
 * Die oberste Leiste sind die Einstellungen für das [JSON](https://github.com/ProjektionTV/Esp32MidiPlayer#json).
