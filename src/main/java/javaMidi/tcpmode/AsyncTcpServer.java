@@ -1,6 +1,7 @@
 package javaMidi.tcpmode;
 
-import javaMidi.cppconv.Song;
+import javaMidi.JavaMain;
+import javaMidi.cppconv.Interface;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -50,8 +51,9 @@ public class AsyncTcpServer {
     }
 
     public void play(String midiData){
+        String payload = midiData.startsWith("{") ? midiData : "{\"midi\":\"" + midiData + "\", \"laenge\":3600}";
         playerExecutor.submit(
-                ()-> Song.playSong(midiData, 3600)
+                ()-> Interface.mqttCallback(JavaMain.TOPIC_MIDI, payload)
         );
     }
 
