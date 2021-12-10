@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AsyncTcpServer {
+    private static final int SOCKET_TIMEOUT_IN_MS = 10*1000;
+
     private boolean active = true;
     private final Executor serverExecutor;
     private final ExecutorService playerExecutor;
@@ -39,6 +41,7 @@ public class AsyncTcpServer {
                             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                             BufferedReader in = new BufferedReader(inputStreamReader)
                     ){
+                        clientSocket.setSoTimeout(SOCKET_TIMEOUT_IN_MS);
                         String midiData = in.readLine();
                         out.printf("playing: %s%n", midiData);
                         play(midiData);
