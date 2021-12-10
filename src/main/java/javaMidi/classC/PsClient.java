@@ -9,17 +9,21 @@ import javaMidi.JavaMain;
 
 public class PsClient {
 
-    public static void publish (String t, String d){
+    public static void publish (String topic, String data){
         if(JavaMain.mqttOut){
             MqttMessage msg = new MqttMessage();
             try{
-                msg.setPayload(d.getBytes("utf-8"));
-                JavaMain.main.client.publish(t, msg);
+                msg.setPayload(data.getBytes("utf-8"));
+                JavaMain.main.client.publish(topic, msg);
             }catch (MqttException | UnsupportedEncodingException e){
                 e.printStackTrace();
             }
         }else{
-            JavaMain.main.window.chat.setText(JavaMain.main.window.chat.getText() + t + ": " + d + "\n");
+            if (JavaMain.main.window == null){
+                System.out.printf("--> %s: %s%n", topic, data);
+                return;
+            }
+            JavaMain.main.window.chat.setText(JavaMain.main.window.chat.getText() + topic + ": " + data + "\n");
         }
     }
     

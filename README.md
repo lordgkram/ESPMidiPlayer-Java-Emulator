@@ -14,7 +14,11 @@ Zum Ausführen werden die jar datei in `build/libs` benötigt sowie eine sountfo
 
 Info: Fals keine `sf.sf2` vorhanden ist fragt das Programm in der Konsole ob eine heruntergeladen werden soll.
 
-Um den Mqtt-Player Modus zu aktivieren muss man das Argument `--mqtt` anhängen. z.B.: `java -jar javaMidi.jar --mqtt`
+### MQTT Mode
+Um den Mqtt-Player Modus zu aktivieren, muss man das Argument `--mqtt` anhängen. z.B.: `java -jar javaMidi.jar --mqtt`
+
+### TCP Mode
+Um den TCP-Player Modus zu aktivieren, muss man das Argument `--tcp` anhängen. z.B.: `java -jar javaMidi.jar --tcp`
 
 ## UI Erklärung
 
@@ -34,3 +38,4 @@ Um den Mqtt-Player Modus zu aktivieren muss man das Argument `--mqtt` anhängen.
 * `-m/--topicMidi (topic)` - der mqtt-topic für den playmidi trafic
 * `-q/--mqtt` - soll mqtt als eingang genutzt werden
 * `-o/--mqttOut` - soll die ui als Fernbedinung genutzt werden
+* `-t/--tcp` - soll tcp als eingang genutzt werden

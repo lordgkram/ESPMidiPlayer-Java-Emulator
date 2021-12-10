@@ -151,6 +151,12 @@ public class JavaMain {
 		optRemt.setArgs(0);
 		optRemt.setLongOpt("mqttOut");
 		options.addOption(optRemt);
+
+		Option optTcp = new Option("t", "if TCP should be used as an input");
+		optTcp.setArgs(0);
+		optTcp.setLongOpt("tcp");
+		options.addOption(optTcp);
+
 		DefaultParser parser = new DefaultParser();
 		try {
 			CommandLine cli = parser.parse(options, args);
@@ -178,6 +184,8 @@ public class JavaMain {
 			mqttOut = cli.hasOption("o");
 			if (cli.hasOption("q")) {
 				new JavaMain(Mode.MQTT);
+			} else if (cli.hasOption("t")){
+				new JavaMain(Mode.TCP);
 			} else {
 				new JavaMain(Mode.GUI);
 			}
@@ -264,6 +272,9 @@ public class JavaMain {
 				break;
 			case GUI:
 				window = new Window();
+				break;
+			case TCP:
+				System.out.println("loading TCP");
 				break;
 		}
 	}
