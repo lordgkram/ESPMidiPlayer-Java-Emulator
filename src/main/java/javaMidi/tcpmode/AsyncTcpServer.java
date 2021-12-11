@@ -2,6 +2,7 @@ package javaMidi.tcpmode;
 
 import javaMidi.JavaMain;
 import javaMidi.cppconv.Interface;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,11 +54,17 @@ public class AsyncTcpServer {
         );
     }
 
-    public void play(String midiData){
-        String payload = midiData.startsWith("{") ? midiData : "{\"midi\":\"" + midiData + "\", \"laenge\":3600}";
+    private void play(String midiData){
+        String cleanedMidiData = midiData.trim();
+        String payload = cleanedMidiData.startsWith("{") ? cleanedMidiData : generateJson(cleanedMidiData);
         playerExecutor.submit(
                 ()-> Interface.mqttCallback(JavaMain.TOPIC_MIDI, payload)
         );
+    }
+
+    private String generateJson(String data){
+        TcpMidiData tcpMidiData = new TcpMidiData(data, 3600);
+        return JavaMain.main.gson.toJson(tcpMidiData);
     }
 
     public void stop(){
