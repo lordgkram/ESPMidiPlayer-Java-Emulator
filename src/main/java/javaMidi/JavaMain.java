@@ -1,5 +1,6 @@
 package javaMidi;
 
+import javaMidi.tcpmode.AsyncTcpServer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -36,6 +37,8 @@ public class JavaMain {
 	public static String CLIENT_ID = "MIDI";
 	public static String MQTT_IRC_TX = "irc/tx";
 	public static String TOPIC_MIDI = "playmidi";
+
+	public static int TCP_SERVER_PORT = 4242;
 
 	public static final short DEFALT_MIDI_CHANNEL = 1;
 	public static final boolean ALLOW_PARSER_2 = true;
@@ -151,6 +154,13 @@ public class JavaMain {
 		optRemt.setArgs(0);
 		optRemt.setLongOpt("mqttOut");
 		options.addOption(optRemt);
+
+		Option optTcp = new Option("t", "if TCP should be used as an input");
+		optTcp.setOptionalArg(true);
+		optTcp.setArgs(1);
+		optTcp.setLongOpt("tcp");
+		options.addOption(optTcp);
+
 		DefaultParser parser = new DefaultParser();
 		try {
 			CommandLine cli = parser.parse(options, args);
@@ -177,21 +187,25 @@ public class JavaMain {
 			}
 			mqttOut = cli.hasOption("o");
 			if (cli.hasOption("q")) {
-				new JavaMain(true);
+				new JavaMain(Mode.MQTT);
+			} else if (cli.hasOption("t")){
+				String port = cli.getOptionValue("t");
+				TCP_SERVER_PORT = port == null ? TCP_SERVER_PORT : Integer.parseInt(port);
+				new JavaMain(Mode.TCP);
 			} else {
-				new JavaMain(false);
+				new JavaMain(Mode.GUI);
 			}
 			System.out.println("loading MIDI");
 			MIDI.init();
 			Main.setup();
 		} catch (Exception e) {
 			e.printStackTrace();
-			new JavaMain(false);
+			new JavaMain(Mode.GUI);
 		}
 	}
 
 	public static void midiDelay(long delay) {
-		if(main.window.shoudStop){
+		if(main.window != null && main.window.shoudStop){
 			main.timeout = System.currentTimeMillis();
 			return;
 		}
@@ -214,7 +228,7 @@ public class JavaMain {
 		}
 	}
 
-	public JavaMain(boolean doMqtt) {
+	public JavaMain(Mode mode) {
 		main = this;
 		System.out.println("loading JSON");
 		gson = new Gson();
@@ -231,36 +245,53 @@ public class JavaMain {
 		presetLieder = new Lied[MENGE_PRESET_LIEDER];
 		for (int i = 0; i < MENGE_PRESET_LIEDER; i++)
 			presetLieder[i] = new Lied();
-		if (doMqtt) {
-			System.out.println("loading MQTT");
-			mqttOut = true;
-			MqttClientPersistence persistence = new MemoryPersistence();
-			try {
-				client = new MqttClient(BROKER, CLIENT_ID, persistence);
-				MqttConnectOptions mqttOpts = new MqttConnectOptions();
-				mqttOpts.setCleanSession(true);
-				client.setCallback(new MqttCallback() {
-					@Override
-					public void messageArrived(String topic, MqttMessage message) throws Exception {
-						Interface.mqttCallback(topic, new String(message.getPayload()));
-					}
 
-					@Override
-					public void deliveryComplete(IMqttDeliveryToken token) {
-					}
+		switch (mode){
+			case MQTT:
+				System.out.println("loading MQTT");
+				mqttOut = true;
+				MqttClientPersistence persistence = new MemoryPersistence();
+				try {
+					client = new MqttClient(BROKER, CLIENT_ID, persistence);
+					MqttConnectOptions mqttOpts = new MqttConnectOptions();
+					mqttOpts.setCleanSession(true);
+					client.setCallback(new MqttCallback() {
+						@Override
+						public void messageArrived(String topic, MqttMessage message) throws Exception {
+							Interface.mqttCallback(topic, new String(message.getPayload()));
+						}
 
-					@Override
-					public void connectionLost(Throwable cause) {
-						cause.printStackTrace();
-					}
-				});
-				client.connect(mqttOpts);
-				client.subscribe(TOPIC_MIDI);
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}
-		} else {
-			window = new Window();
+						@Override
+						public void deliveryComplete(IMqttDeliveryToken token) {
+						}
+
+						@Override
+						public void connectionLost(Throwable cause) {
+							cause.printStackTrace();
+						}
+					});
+					client.connect(mqttOpts);
+					client.subscribe(TOPIC_MIDI);
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}
+				break;
+			case GUI:
+				window = new Window();
+				break;
+			case TCP:
+				System.out.println("loading TCP");
+				startTcpServerOnPort(TCP_SERVER_PORT);
+				break;
+		}
+	}
+
+	private void startTcpServerOnPort(int port) {
+		AsyncTcpServer tcpServer = new AsyncTcpServer();
+		try {
+			tcpServer.listenOnPort(port);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

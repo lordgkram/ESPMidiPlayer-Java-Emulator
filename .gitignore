@@ -10,3 +10,5 @@ do.sh
 .settings
 .project
 tmp
+.idea/
+sf.sf2
