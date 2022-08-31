@@ -43,6 +43,7 @@ public class MIDItoTXT {
             if (sysPause < 128)
                 out += "" + sysPause + " ";
             byte[] data = msg.getMessage();
+            byte[] latestVolume = new byte[]{ 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127 };
             if (data.length == 3) {
                 int datan = (data[0] & 0xF0) >> 4;
                 int channel = (data[0] & 0xF);
@@ -52,6 +53,10 @@ public class MIDItoTXT {
                 }
                 if (datan == 0b1000 || datan == 0b1001) {
                     // note on off
+                    if(latestVolume[letzterChannel] != data[2]) {
+                        latestVolume[letzterChannel] = data[2];
+                        out += "v" + data[2];
+                    }
                     if (data[1] == ln) {
                         out += "l";
                     } else {
@@ -66,7 +71,8 @@ public class MIDItoTXT {
                         out += "s";
                     } else if (controll == 7) {
                         // volume
-                        out += "v" + data[1] + "";
+                        out += "z" + data[1] + "";
+                        latestVolume[letzterChannel] = data[1];
                     } else {
                         System.out.println("Unknown controll:" + controll);
                     }
